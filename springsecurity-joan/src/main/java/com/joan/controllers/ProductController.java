@@ -3,6 +3,7 @@ package com.joan.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,11 @@ import com.joan.services.ProductService;
 public class ProductController {
 
     private ProductService productService;
+
+       @Autowired
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping()
     public List<Product> list(){
@@ -45,16 +51,18 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product){
-        Product productNew = productService.save(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productNew);
+        Optional<Product> productOptional = productService.update(id, product);
+        
+        if(productOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.CREATED).body(productOptional.orElseThrow());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
-        Product product = new Product();
-        product.setId(id);
-
-        Optional<Product> productOptional = productService.delete(product);
+   
+        Optional<Product> productOptional = productService.delete(id);
         if(productOptional.isPresent()){
             return ResponseEntity.ok(productOptional.orElseThrow());
         }
