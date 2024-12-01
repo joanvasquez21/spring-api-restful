@@ -57,7 +57,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productNew);
     }
 
-
+/**Add */
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody Product product, BindingResult result) {
         if (result.hasFieldErrors()) {
