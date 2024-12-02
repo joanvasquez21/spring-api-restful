@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -24,7 +25,8 @@ public class Product {
     @NotBlank(message="{NotBlank.product.description}")
     private String description;
     
-    @Min(500)
+    @NotNull(message="{NotNull.product.price}")
+    @Min(value=500, message="{Min.product.price}")
     private Integer price;
 
     public Long getId() {
